@@ -1,7 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
-miasta = pd.read_csv('miasta.csv')
+path = 'C:\Studia\Inteligencja obliczeniowa\Inteligencja-obliczeniowa\lab01\miasta.csv'
+
+miasta = pd.read_csv(path)
 print(miasta.values)
 
 
@@ -9,24 +12,45 @@ row = pd.DataFrame({'Rok': [2010], 'Gdansk': [460], 'Poznan': [555], 'Szczecin':
 miasta = miasta.append(row, ignore_index=True)
 print(miasta)
 
-miasta.plot(kind='line', x='Rok', xticks=miasta.Rok, y='Gdansk', color='red',
-            xlabel="Lata", ylabel='Liczba ludnosci (w tys.)', legend=False,
+miasta.plot(kind='line', x='Rok', xticks=np.arange(miasta.Rok.min(), miasta.Rok.max() + 1, 10), y='Gdansk', color='red',
+            xlabel="Lata", ylabel='Liczba ludnosci [w tys.]', legend=False,
             title='Ludnosc w miastach Polski', style='.-')
 plt.show()
 
 
-miasta.plot(kind='line', x='Rok', style='.-')
+miasta.plot(kind='line', x='Rok', xticks=np.arange(miasta.Rok.min(), miasta.Rok.max() + 1, 10), style='.-')
 plt.show()
 
 print("\nStandaryzacja")
 
-miasta_std = (miasta - miasta.mean()) / miasta.std()
-print(miasta_std.mean())
-print(miasta_std.std())
+def standaryzacja(col):
+    return (col - col.mean()) / col.std()
+
+miasta_standaryzowane = miasta[['Gdansk', 'Poznan', 'Szczecin']].apply(standaryzacja, axis=0)
+
+print(miasta_standaryzowane)
+
+srednia = miasta_standaryzowane.mean()
+odchylenie = miasta_standaryzowane.std()
+print("\nŚrednia:")
+print(srednia)
+print("\nOdchylenie standardowe:")
+print(odchylenie)
+
+
 
 print("\nNormalizacja")
 
-miasta_norm = (miasta - miasta.min()) / (miasta.max() - miasta.min())
+def normalizacja(col):
+    return (col - col.min()) / (col.max() - col.min())
 
-print(miasta_norm.min())
-print(miasta_norm.max())
+miasta_normalizowane = miasta[['Gdansk', 'Poznan', 'Szczecin']].apply(normalizacja, axis=0)
+
+print(miasta_normalizowane)
+
+minimal = miasta_normalizowane.min()
+maximum = miasta_normalizowane.max()
+print("\nMin:")
+print(minimal)
+print("\nMax:")
+print(maximum)
