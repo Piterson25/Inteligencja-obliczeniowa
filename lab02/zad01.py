@@ -1,36 +1,23 @@
 import pygad
 import numpy
-import random
 
-numbers = numpy.arange(0,11)
 names = ['zegar', 'obraz-pejzaz', 'obraz-portret', 'radio', 'laptop', 'lampka nocna', 'srebrne sztucce', 'porcelana', 'figura z brazu', 'skorzana torebka', 'odkurzacz']
 weights = [7, 7, 6, 2, 5, 6, 1, 3, 10, 3, 15]
 values = [100, 300, 200, 40, 500, 70, 100, 250, 300, 280, 300]
+max_weight = 25
 gene_space = [0, 1]
 
-def func():
-    random.shuffle(numbers)
-
-    quantity = 0
-    left = 25
-
-
-    for i in numbers:
-        if left - weights[i] >= 0:
-            quantity += values[i]
-            left -= weights[i]  
-
-        if left == 0:
-            break
-    
-    return quantity
-
+# definiujemy funkcję fitness
 def fitness_func(solution, solution_idx):
-    q1 = func()
-    q2 = func()
-
-    fitness = -numpy.abs(q1 - q2)
-    return fitness
+    weight = 0
+    value = 0
+    for i in range(len(solution)):
+        if solution[i] == 1:
+            weight += weights[i]
+            value += values[i]
+    if weight > max_weight:
+        value = 0
+    return value
 
 fitness_function = fitness_func
 
@@ -43,7 +30,7 @@ num_genes = len(weights)
 #ile pokolen
 #ilu rodzicow zachowac (kilka procent)
 num_parents_mating = 5
-num_generations = 30
+num_generations = 50
 keep_parents = 2
 
 #jaki typ selekcji rodzicow?
@@ -82,6 +69,14 @@ print("Fitness value of the best solution = {solution_fitness}".format(solution_
 #tutaj dodatkowo wyswietlamy sume wskazana przez jedynki
 prediction = numpy.sum(weights*solution)
 print("Predicted output based on the best solution : {prediction}".format(prediction=prediction))
+
+result = "Przedmioty: "
+
+for i in range(len(solution)):
+    if solution[i] == 1:
+        result += names[i] + '(' + str(values[i]) + ')' + ', '
+
+print(result)
 
 #wyswietlenie wykresu: jak zmieniala sie ocena na przestrzeni pokolen
 ga_instance.plot_fitness()
