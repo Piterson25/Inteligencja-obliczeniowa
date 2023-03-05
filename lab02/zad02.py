@@ -2,8 +2,6 @@ import pygad
 import numpy
 import time
 
-start = time.time()
-
 names = ['zegar', 'obraz-pejzaz', 'obraz-portret', 'radio', 'laptop', 'lampka nocna', 'srebrne sztucce', 'porcelana', 'figura z brazu', 'skorzana torebka', 'odkurzacz']
 weights = [7, 7, 6, 2, 5, 6, 1, 3, 10, 3, 15]
 values = [100, 300, 200, 40, 500, 70, 100, 250, 300, 280, 300]
@@ -48,6 +46,8 @@ crossover_type = "single_point"
 mutation_type = "random"
 mutation_percent_genes = int(100/num_genes + 1)
 
+start = time.time()
+
 #inicjacja algorytmu z powyzszymi parametrami wpisanymi w atrybuty
 ga_instance = pygad.GA(gene_space=gene_space,
                        num_generations=num_generations,
@@ -64,6 +64,8 @@ ga_instance = pygad.GA(gene_space=gene_space,
 
 #uruchomienie algorytmu
 ga_instance.run()
+
+end = time.time() - start
 
 #podsumowanie: najlepsze znalezione rozwiazanie (chromosom+ocena)
 solution, solution_fitness, solution_idx = ga_instance.best_solution()
@@ -84,11 +86,10 @@ print(result)
 
 print("Mineło pokoleń:", ga_instance.generations_completed)
 
-time = time.time() - start
-print("Czas trwania algorytmu: " + str(round(time,4)) + "s")
+print("Czas trwania algorytmu: " + str(round(end, 4)) + "s")
 
-#Czasy: 0.011s, 0.004s, 0.017s, 0.006s, 0.007s, 0.005s, 0.008s, 0.01s, 0.01s, 0.009s
-#Srednia: 0.009s
+#Czasy: 0.004, 0.004s, 0.005s, 0.003s, 0.004s, 0.004s, 0.007s, 0.008s, 0.005s, 0.004s
+#Srednia: 0.005s
 
 #wyswietlenie wykresu: jak zmieniala sie ocena na przestrzeni pokolen
 ga_instance.plot_fitness()
