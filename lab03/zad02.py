@@ -1,33 +1,46 @@
 import pygad
 import numpy
-import math
-from random import random
 
-gene_space = []
+gene_space = [0, 1, 2, 3]
 
-for i in range(6):
-    gene_space.append(random())
+path = 'C:\Studia\Inteligencja obliczeniowa\Inteligencja-obliczeniowa\lab03\labirynth.txt'
 
-def endurance(x, y, z, u, v, w): 
-    return math.exp(-2*(y-math.sin(x))**2)+math.sin(z*u)+math.cos(v*w)
+labyrinth = []
+max_steps = 30
+
+with open(path, "r") as f:
+    labyrinth = [[char for char in line.strip()] for line in f]
+
 
 # definiujemy funkcję fitness
 def fitness_func(solution, solution_idx):
-    return endurance(solution[0], solution[1], solution[2],
-                     solution[3], solution[4], solution[5])
+    position = numpy.array([1, 1])
+    for move in solution:
+        if move == 0 and position[0] > 0 and labyrinth[position[0] - 1][position[1]] != '#':  # up
+            position[0] -= 1
+        elif move == 1 and position[1] < 11 and labyrinth[position[0]][position[1] + 1] != '#':  # right
+            position[1] += 1
+        elif move == 2 and position[0] < 11 and labyrinth[position[0] + 1][position[1]] != '#':  # down
+            position[0] += 1
+        elif move == 3 and position[1] > 0 and labyrinth[position[0]][position[1] - 1] != '#':  # left
+            position[1] -= 1
+
+        if labyrinth[position[0]][position[1]] == 'E':
+            return 1 / (len(solution) + 1)
+    return 1 / (len(solution) + 1)
 
 fitness_function = fitness_func
 
 #ile chromsomów w populacji
 #ile genow ma chromosom
-sol_per_pop = 10
-num_genes = 6
+sol_per_pop = 144
+num_genes = 144
 
 #ile wylaniamy rodzicow do "rozmanazania" (okolo 50% populacji)
 #ile pokolen
 #ilu rodzicow zachowac (kilka procent)
-num_parents_mating = 3
-num_generations = 30
+num_parents_mating = 6
+num_generations = 100
 keep_parents = 2
 
 #jaki typ selekcji rodzicow?
@@ -40,7 +53,7 @@ crossover_type = "single_point"
 #mutacja ma dzialac na ilu procent genow?
 #trzeba pamietac ile genow ma chromosom
 mutation_type = "random"
-mutation_percent_genes = 20
+mutation_percent_genes = 10
 
 #inicjacja algorytmu z powyzszymi parametrami wpisanymi w atrybuty
 ga_instance = pygad.GA(gene_space=gene_space,
@@ -64,11 +77,25 @@ print("Parameters of the best solution : {solution}".format(solution=solution))
 print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness))
 
 #tutaj dodatkowo wyswietlamy sume wskazana przez jedynki
-prediction = numpy.sum(6*solution)
+prediction = numpy.sum(solution)
 print("Predicted output based on the best solution : {prediction}".format(prediction=prediction))
 
-#Najlepszy stop: 2.827
-#Najlepsze metale: [0.01598419 0.01598419 0.98680711 0.98680711 0.01598419 0.01598419]
+# obliczenie ścieżki
+position = numpy.array([1, 1])
+path = [(1,1)]
+for move in solution:
+    if move == 0 and position[0] > 0 and labyrinth[position[0] - 1][position[1]] != '#':  # up
+        position[0] -= 1
+    elif move == 1 and position[1] < 11 and labyrinth[position[0]][position[1] + 1] != '#':  # right
+        position[1] += 1
+    elif move == 2 and position[0] < 11 and labyrinth[position[0] + 1][position[1]] != '#':  # down
+        position[0] += 1
+    elif move == 3 and position[1] > 0 and labyrinth[position[0]][position[1] - 1] != '#':  # left
+        position[1] -= 1
+    path.append(tuple(position))
+
+# wyświetlenie ścieżki
+print("Best path:", path)
 
 #wyswietlenie wykresu: jak zmieniala sie ocena na przestrzeni pokolen
 ga_instance.plot_fitness()
