@@ -4,10 +4,10 @@ import time
 
 gene_space = [0, 1, 2, 3]
 
-#0 - lewo
-#1 - dół
-#2 - prawo
-#3 - góra
+#0 - góra
+#1 - prawo
+#2 - dół
+#3 - lewo
 
 path = 'C:\Studia\Inteligencja obliczeniowa\Inteligencja-obliczeniowa\lab03\labirynth.txt'
 
@@ -17,9 +17,9 @@ max_steps = 30
 with open(path, "r") as f:
     labyrinth = [[char for char in line.strip()] for line in f]
 
-def vector_distance(start, end):
-    return abs(start[0] - end[0]) + abs(start[1] - end[1])
 
+def vector_distance(v1, v2):
+    return abs(v1[0] - v2[0]) + abs(v1[1] - v2[1])
 
 # definiujemy funkcję fitness
 def fitness_func(solution, solution_idx):
@@ -29,26 +29,26 @@ def fitness_func(solution, solution_idx):
 
     for move in solution:
         if move == 0:
-            if position[0] > 0 and labyrinth[position[0] - 1][position[1]] != '#':  # up
-                position[0] -= 1
+            if position[1] > 0 and labyrinth[position[0]][position[1] - 1] != '#': #góra
+                position[1] -= 1
                 steps += 1
             else:
                 penalty += 1
         elif move == 1:
-            if position[1] < 11 and labyrinth[position[0]][position[1] + 1] != '#':  # right
-                position[1] += 1
-                steps += 1
-            else:
-                penalty += 1
-        elif move == 2:
-            if position[0] < 11 and labyrinth[position[0] + 1][position[1]] != '#':  # down
+            if position[0] < 11 and labyrinth[position[0] + 1][position[1]] != '#': #prawo
                 position[0] += 1
                 steps += 1
             else:
                 penalty += 1
+        elif move == 2:
+            if position[1] < 11 and labyrinth[position[0]][position[1] + 1] != '#': #dół
+                position[1] += 1
+                steps += 1
+            else:
+                penalty += 1
         elif move == 3:
-            if position[1] > 0 and labyrinth[position[0]][position[1] - 1] != '#':  # left
-                position[1] -= 1
+            if position[0] > 0 and labyrinth[position[0] - 1][position[1]] != '#': #lewo
+                position[0] -= 1
                 steps += 1
             else:
                 penalty += 1
@@ -84,7 +84,7 @@ crossover_type = "single_point"
 mutation_type = "random"
 mutation_percent_genes = 10
 
-start = time.time()
+start_time = time.time()
 
 #inicjacja algorytmu z powyzszymi parametrami wpisanymi w atrybuty
 ga_instance = pygad.GA(gene_space=gene_space,
@@ -102,7 +102,7 @@ ga_instance = pygad.GA(gene_space=gene_space,
 #uruchomienie algorytmu
 ga_instance.run()
 
-end = time.time() - start
+end_time = time.time() - start_time
 
 #podsumowanie: najlepsze znalezione rozwiazanie (chromosom+ocena)
 solution, solution_fitness, solution_idx = ga_instance.best_solution()
@@ -116,14 +116,14 @@ print("Predicted output based on the best solution : {prediction}".format(predic
 position = numpy.array([1, 1])
 path = [(1,1)]
 for move in solution:
-    if move == 0 and position[0] > 0 and labyrinth[position[0] - 1][position[1]] != '#':  # up
-        position[0] -= 1
-    elif move == 1 and position[1] < 11 and labyrinth[position[0]][position[1] + 1] != '#':  # right
-        position[1] += 1
-    elif move == 2 and position[0] < 11 and labyrinth[position[0] + 1][position[1]] != '#':  # down
-        position[0] += 1
-    elif move == 3 and position[1] > 0 and labyrinth[position[0]][position[1] - 1] != '#':  # left
+    if move == 0 and position[1] > 0 and labyrinth[position[0]][position[1] - 1] != '#': #góra
         position[1] -= 1
+    elif move == 1 and position[0] < 11 and labyrinth[position[0] + 1][position[1]] != '#': #prawo
+        position[0] += 1
+    elif move == 2 and position[1] < 11 and labyrinth[position[0]][position[1] + 1] != '#': #dół
+        position[1] += 1
+    elif move == 3 and position[0] > 0 and labyrinth[position[0] - 1][position[1]] != '#': #lewo
+        position[0] -= 1
 
     path.append(tuple(position))
 
@@ -133,7 +133,7 @@ for move in solution:
 # wyświetlenie ścieżki
 print("Best path:", path)
 
-print("Czas trwania algorytmu: " + str(round(end, 4)) + "s")
+print("Czas trwania algorytmu: " + str(round(end_time, 4)) + "s")
 
 #Czasy: 1.6794s, 1.7545s, 1.7649s, 1.7675s, 1.7425s, 1.7849s, 1.8671s, 1.821s, 1.8064s, 1.7724s
 #Srednia: 1,776s

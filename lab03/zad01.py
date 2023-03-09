@@ -1,12 +1,8 @@
 import pygad
 import numpy
 import math
-from random import random
 
-gene_space = []
-
-for i in range(6):
-    gene_space.append(random())
+gene_space = numpy.random.rand(6)
 
 def endurance(x, y, z, u, v, w): 
     return math.exp(-2*(y-math.sin(x))**2)+math.sin(z*u)+math.cos(v*w)
@@ -20,7 +16,7 @@ fitness_function = fitness_func
 
 #ile chromsomów w populacji
 #ile genow ma chromosom
-sol_per_pop = 10
+sol_per_pop = 12
 num_genes = 6
 
 #ile wylaniamy rodzicow do "rozmanazania" (okolo 50% populacji)
@@ -67,8 +63,8 @@ print("Fitness value of the best solution = {solution_fitness}".format(solution_
 prediction = numpy.sum(6*solution)
 print("Predicted output based on the best solution : {prediction}".format(prediction=prediction))
 
-#Najlepszy stop: 2.827
-#Najlepsze metale: [0.01598419 0.01598419 0.98680711 0.98680711 0.01598419 0.01598419]
+#Najlepsza wytzrymalosc stopu: 2.833
+#Najlepsze metale: [0.77065601 0.67101071 0.99426955 0.99426955 0.0107362  0.0107362 ]
 
 #wyswietlenie wykresu: jak zmieniala sie ocena na przestrzeni pokolen
 ga_instance.plot_fitness()
