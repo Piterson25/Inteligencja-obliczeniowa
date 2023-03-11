@@ -19,44 +19,65 @@ with open(path, "r") as f:
 
 
 def vector_distance(v1, v2):
-    return abs(v1[0] - v2[0]) + abs(v1[1] - v2[1])
+    return numpy.sqrt((v2[0] - v1[0])**2 + (v2[1] - v1[1])**2)
 
 # definiujemy funkcję fitness
 def fitness_func(solution, solution_idx):
     position = numpy.array([1, 1])
+    visited = []
     penalty = 0
     steps = 0
 
     for move in solution:
         if move == 0:
-            if position[1] > 0 and labyrinth[position[0]][position[1] - 1] != '#': #góra
+            if position[1] - 1 > 0 and labyrinth[position[1] - 1][position[0]] != '#': #góra
                 position[1] -= 1
                 steps += 1
+                
+                if position not in visited:
+                    visited.append(position)
+                else:
+                    penalty += 2
             else:
                 penalty += 1
         elif move == 1:
-            if position[0] < 11 and labyrinth[position[0] + 1][position[1]] != '#': #prawo
+            if position[0] + 1 < 11 and labyrinth[position[1]][position[0] + 1] != '#': #prawo
                 position[0] += 1
                 steps += 1
+
+                if position not in visited:
+                    visited.append(position)
+                else:
+                    penalty += 2
             else:
                 penalty += 1
         elif move == 2:
-            if position[1] < 11 and labyrinth[position[0]][position[1] + 1] != '#': #dół
+            if position[1] + 1< 11 and labyrinth[position[1] + 1][position[0]] != '#': #dół
                 position[1] += 1
                 steps += 1
+
+                if position not in visited:
+                    visited.append(position)
+                else:
+                    penalty += 2
             else:
                 penalty += 1
         elif move == 3:
-            if position[0] > 0 and labyrinth[position[0] - 1][position[1]] != '#': #lewo
+            if position[0] - 1 > 0 and labyrinth[position[1]][position[0] - 1] != '#': #lewo
                 position[0] -= 1
                 steps += 1
+
+                if position not in visited:
+                    visited.append(position)
+                else:
+                    penalty += 2
             else:
                 penalty += 1
 
-        if labyrinth[position[0]][position[1]] == 'E' or steps > max_steps:
+        if labyrinth[position[1]][position[0]] == 'E':
             break
 
-    return vector_distance([1, 1], position) - penalty
+    return steps - vector_distance([10, 10], position) - penalty
 
 fitness_function = fitness_func
 
@@ -68,7 +89,7 @@ num_genes = max_steps
 #ile wylaniamy rodzicow do "rozmanazania" (okolo 50% populacji)
 #ile pokolen
 #ilu rodzicow zachowac (kilka procent)
-num_parents_mating = 10
+num_parents_mating = 20
 num_generations = 200
 keep_parents = 2
 
@@ -113,21 +134,61 @@ print("Fitness value of the best solution = {solution_fitness}".format(solution_
 prediction = numpy.sum(solution)
 print("Predicted output based on the best solution : {prediction}".format(prediction=prediction))
 
-position = numpy.array([1, 1])
 path = [(1,1)]
+position = numpy.array([1, 1])
+visited = []
+penalty = 0
+steps = 0
+
 for move in solution:
-    if move == 0 and position[1] > 0 and labyrinth[position[0]][position[1] - 1] != '#': #góra
-        position[1] -= 1
-    elif move == 1 and position[0] < 11 and labyrinth[position[0] + 1][position[1]] != '#': #prawo
-        position[0] += 1
-    elif move == 2 and position[1] < 11 and labyrinth[position[0]][position[1] + 1] != '#': #dół
-        position[1] += 1
-    elif move == 3 and position[0] > 0 and labyrinth[position[0] - 1][position[1]] != '#': #lewo
-        position[0] -= 1
+    if move == 0:
+        if position[1] - 1 > 0 and labyrinth[position[1] - 1][position[0]] != '#': #góra
+            position[1] -= 1
+            steps += 1
+            
+            if position not in visited:
+                visited.append(position)
+            else:
+                penalty += 2
+        else:
+            penalty += 1
+    elif move == 1:
+        if position[0] + 1 < 11 and labyrinth[position[1]][position[0] + 1] != '#': #prawo
+            position[0] += 1
+            steps += 1
+
+            if position not in visited:
+                visited.append(position)
+            else:
+                penalty += 2
+        else:
+            penalty += 1
+    elif move == 2:
+        if position[1] + 1< 11 and labyrinth[position[1] + 1][position[0]] != '#': #dół
+            position[1] += 1
+            steps += 1
+
+            if position not in visited:
+                visited.append(position)
+            else:
+                penalty += 2
+        else:
+            penalty += 1
+    elif move == 3:
+        if position[0] - 1 > 0 and labyrinth[position[1]][position[0] - 1] != '#': #lewo
+            position[0] -= 1
+            steps += 1
+
+            if position not in visited:
+                visited.append(position)
+            else:
+                penalty += 2
+        else:
+            penalty += 1
 
     path.append(tuple(position))
 
-    if labyrinth[position[0]][position[1]] == 'E':
+    if labyrinth[position[1]][position[0]] == 'E':
         break
 
 # wyświetlenie ścieżki
