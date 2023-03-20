@@ -1,5 +1,4 @@
 import math
-
 import numpy as np
 import pyswarms as ps
 from pyswarms.utils.plotters import plot_cost_history
