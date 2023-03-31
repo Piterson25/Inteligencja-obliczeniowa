@@ -1,6 +1,5 @@
 import pygad
 import numpy as np
-import time
 
 board = []
 
@@ -15,9 +14,7 @@ with open('input6x6.txt') as f:
                 row.append(line[i])
         board.append(row)
 
-# print(board)
-
-gene_space = []
+print(board)
 
 col_edges = list(map(int, board[0][1:]))
 row_edges = list(map(int, [row[0] for row in board[1:]]))
@@ -33,24 +30,26 @@ for i in range(1, len(board)):
         row_values.append(int(board[i][j]))
     board_values.append(row_values)
 
+
 # print(col_edges)
 # print(row_edges)
 # print(board_values)
 
 
-def is_valid_ship(visited, row, col, k, ship_size):
-    for l in range(ship_size):
-        if row+l >= len(visited) or col+l >= len(visited[0]) or visited[row+l][col+l] == 1:
+def is_valid_ship(visited, rw, cl, ship_size):
+    for length in range(ship_size):
+        if rw + length >= len(visited) or cl + length >= len(visited[0]) or visited[rw + length][cl + length] == 1:
             return False
-        if row+l > 0 and col+l > 0 and visited[row+l-1][col+l-1] == 1:
+        if rw + length > 0 and cl + length > 0 and visited[rw + length - 1][cl + length - 1] == 1:
             return False
-        if row+l < len(visited)-1 and col+l > 0 and visited[row+l+1][col+l-1] == 1:
+        if rw + length < len(visited) - 1 and cl + length > 0 and visited[rw + length + 1][cl + length - 1] == 1:
             return False
-        if col+l > 0 and visited[row+l][col+l-1] == 1:
+        if cl + length > 0 and visited[rw + length][cl + length - 1] == 1:
             return False
-        if col+l < len(visited[0])-1 and visited[row+l][col+l+1] == 1:
+        if cl + length < len(visited[0]) - 1 and visited[rw + length][cl + length + 1] == 1:
             return False
     return True
+
 
 def fitness_func(solution, solution_idx):
     # Reshape solution into 2D grid
@@ -60,29 +59,30 @@ def fitness_func(solution, solution_idx):
     score = 0
     visited = np.zeros((len(row_edges), len(col_edges)))
 
+    empty_cells = 0
+
     # Check each ship in the solution
     for ship_size in [3, 2, 2, 1, 1, 1]:
         for i in range(len(row_edges)):
             for j in range(len(col_edges)):
                 # Check if ship fits in grid starting at (i, j)
                 if i + ship_size <= len(row_edges):
-                    ship = grid[i:i+ship_size, j]
-                    if np.sum(ship) == ship_size and is_valid_ship(visited, i, j, 0, ship_size):
+                    ship = grid[i:i + ship_size, j]
+                    if np.sum(ship) == ship_size and is_valid_ship(visited, i, j, ship_size):
                         score += 1
                         for k in range(ship_size):
-                            visited[i+k][j+k] = 1
+                            visited[i + k][j + k] = 1
                 if j + ship_size <= len(col_edges):
-                    ship = grid[i, j:j+ship_size]
-                    if np.sum(ship) == ship_size and is_valid_ship(visited, i, j, 0, ship_size):
+                    ship = grid[i, j:j + ship_size]
+                    if np.sum(ship) == ship_size and is_valid_ship(visited, i, j, ship_size):
                         score += 1
                         for k in range(ship_size):
-                            visited[i][j+k] = 1
+                            visited[i][j + k] = 1
                 empty_cells = np.sum(visited == 0)
                 if empty_cells > 6:
                     return score - empty_cells / (len(row_edges) * len(col_edges))
-                
-    return score - empty_cells / (len(row_edges) * len(col_edges))
 
+    return score - empty_cells / (len(row_edges) * len(col_edges))
 
 
 fitness_function = fitness_func
@@ -103,7 +103,7 @@ keep_parents = 2
 # sss = steady, rws=roulette, rank = rankingowa, tournament = turniejowa
 parent_selection_type = "sss"
 
-# w il =u punktach robic krzyzowanie?
+# w ilu punktach robic krzyzowanie?
 crossover_type = "single_point"
 
 # mutacja ma dzialac na ilu procent genow?
