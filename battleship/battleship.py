@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pygad
 import time
+import pyswarms as ps
 
 gene_space = [0, 1]
 
@@ -108,7 +109,7 @@ inputs = [
     {"column_counts": [1, 4, 2, 4, 2, 0, 2, 0, 7, 1, 4, 0],
      "row_counts": [6, 0, 1, 4, 1, 1, 0, 4, 2, 4, 3, 1],
      "start_positions": {(6, 3): 0, (9, 3): 1, (0, 4): 0, (1, 4): 0, (2, 4): 0, (1, 5): 0,
-                         (3, 5): 1,  (4, 7): 1, (10, 7): 1, (10, 8): 1, (0, 9): 1, (3, 9): 0, (3, 10): 0},
+                         (3, 5): 1, (4, 7): 1, (10, 7): 1, (10, 8): 1, (0, 9): 1, (3, 9): 0, (3, 10): 0},
      "correct": [
          [0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0],
          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -403,7 +404,6 @@ plt.ylabel('Średnia prawidłowść rozwiązania (%)')
 
 # wyświetlenie wykresu
 plt.show()
-
 
 print('Średnia prawidłowść rozwiązania')
 print(f'Małe inputy: {round(np.mean(correctness[0]), 2)}%')
