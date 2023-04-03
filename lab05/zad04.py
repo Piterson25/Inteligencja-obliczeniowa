@@ -9,20 +9,20 @@ df = df.sort_values(by=['species'])
 
 (train_set, test_set) = train_test_split(df, train_size=0.7, random_state=278833)
 
-train_set_X = train_set.iloc[:, :-1].values # Input 
-train_set_y = train_set.iloc[:, -1].values # Class
-test_set_X = test_set.iloc[:, :-1].values # Input 
-test_set_y = test_set.iloc[:, -1].values # Class
+train_set_X = train_set.iloc[:, :-1].values  # Input
+train_set_y = train_set.iloc[:, -1].values  # Class
+test_set_X = test_set.iloc[:, :-1].values  # Input
+test_set_y = test_set.iloc[:, -1].values  # Class
 
 knn_3 = KNeighborsClassifier(n_neighbors=3)
 knn_5 = KNeighborsClassifier(n_neighbors=5)
 knn_11 = KNeighborsClassifier(n_neighbors=11)
 nb = GaussianNB()
 
-knn_3.fit(train_set_X , train_set_y)
-knn_5.fit(train_set_X , train_set_y)
-knn_11.fit(train_set_X , train_set_y)
-nb.fit(train_set_X , train_set_y)
+knn_3.fit(train_set_X, train_set_y)
+knn_5.fit(train_set_X, train_set_y)
+knn_11.fit(train_set_X, train_set_y)
+nb.fit(train_set_X, train_set_y)
 
 knn_3_acc = accuracy_score(test_set_y, knn_3.predict(test_set_X))
 knn_5_acc = accuracy_score(test_set_y, knn_5.predict(test_set_X))

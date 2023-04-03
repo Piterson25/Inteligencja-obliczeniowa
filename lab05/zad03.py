@@ -9,10 +9,10 @@ df = df.sort_values(by=['species'])
 (train_set, test_set) = train_test_split(df, test_size=0.3, train_size=0.7, random_state=278833)
 
 # Wyciąganie z odpowiednich kolumn (bez ostatniej)
-train_set_X = train_set.iloc[:, :-1].values # Input 
-train_set_y = train_set.iloc[:, -1].values # Class
-test_set_X = test_set.iloc[:, :-1].values # Input 
-test_set_y = test_set.iloc[:, -1].values # Class
+train_set_X = train_set.iloc[:, :-1].values  # Input
+train_set_y = train_set.iloc[:, -1].values  # Class
+test_set_X = test_set.iloc[:, :-1].values  # Input
+test_set_y = test_set.iloc[:, -1].values  # Class
 
 dtc = DecisionTreeClassifier()
 
