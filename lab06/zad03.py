@@ -18,13 +18,12 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random
 mlp = MLPClassifier(hidden_layer_sizes=(6, 3), activation='relu', max_iter=500)
 mlp.fit(X_train, y_train)
 
-predict_train = mlp.predict(X_train)
 predict_test = mlp.predict(X_test)
 
 print("Zbior testowy:")
 
-print("Macierz bledu:")
-print(confusion_matrix(y_test, predict_test))
-
 print("Dokladnosc:")
 print(classification_report(y_test, predict_test))
+
+print("Macierz bledu:")
+print(confusion_matrix(y_test, predict_test))

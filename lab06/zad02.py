@@ -11,6 +11,9 @@ datasets = train_test_split(iris.data, iris.target,
 # train_labels - zbior treningowy
 # test_labels - zbior testowy
 # wartosci dla kazdego z irysow
+# Iris Setosa: 0
+# Iris Versicolor: 1
+# Iris Virginica: 2
 train_data, test_data, train_labels, test_labels = datasets
 scaler = StandardScaler()
 
