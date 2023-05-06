@@ -1,5 +1,14 @@
-import matplotlib.pyplot as plt
 import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.utils import to_categorical
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.preprocessing import LabelEncoder
+import matplotlib.pyplot as plt
 
 df = pd.read_csv('Covid Data.csv')
 df = df.head(20000)
@@ -39,15 +48,10 @@ plt.title('Wyniki testu COVID-19')
 
 plt.show()
 
-from sklearn.model_selection import train_test_split
-
 X = df.drop(['CLASIFFICATION_FINAL'], axis=1)
 y = df['CLASIFFICATION_FINAL']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix
 
 dtc1 = DecisionTreeClassifier(max_depth=5)
 dtc1.fit(X_train, y_train)
@@ -65,8 +69,6 @@ cm = confusion_matrix(y_test, y_pred)
 print(f"Decision Tree (max_depth=None): Accuracy={acc:.4f}")
 print(f"Confusion Matrix:\n{cm}")
 
-from sklearn.naive_bayes import GaussianNB
-
 nb = GaussianNB()
 nb.fit(X_train, y_train)
 y_pred = nb.predict(X_test)
@@ -74,8 +76,6 @@ acc = accuracy_score(y_test, y_pred)
 cm = confusion_matrix(y_test, y_pred)
 print(f"Naive Bayes: Accuracy={acc:.4f}")
 print(f"Confusion Matrix:\n{cm}")
-
-from sklearn.neighbors import KNeighborsClassifier
 
 knn3 = KNeighborsClassifier(n_neighbors=3)
 knn3.fit(X_train, y_train)
@@ -100,14 +100,6 @@ acc = accuracy_score(y_test, y_pred)
 cm = confusion_matrix(y_test, y_pred)
 print(f"k-NN (k=7): Accuracy={acc:.4f}")
 print(f"Confusion Matrix:\n{cm}")
-
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.utils import to_categorical
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, confusion_matrix
-from sklearn.preprocessing import LabelEncoder
-import matplotlib.pyplot as plt
 
 target_column = ['CLASIFFICATION_FINAL']
 predictors = list(set(list(df.columns)) - set(target_column))
